@@ -3,14 +3,84 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+const int ARBOL_SIN_NODOS = 0;
+const int ELEMENTOS_IGUALES = 0;
+
+nodo_abb_t *crear_nodo(void *elemento)
+{
+	nodo_abb_t *nodo = malloc(sizeof(nodo_abb_t));
+	if (nodo == NULL)
+		return NULL;
+
+	nodo->elemento = elemento;
+	nodo->derecha = NULL;
+	nodo->izquierda = NULL;
+	return nodo;
+}
+
+abb_t *abb_insertar_rec(abb_t *arbol, nodo_abb_t *nodo_a_insertar,
+			nodo_abb_t *nodo_actual)
+{
+	if (arbol == NULL || nodo_a_insertar == NULL)
+		return NULL;
+
+	if (abb_vacio(arbol)) {
+		arbol->nodo_raiz = nodo_a_insertar;
+		arbol->tamanio++;
+		return arbol;
+	}
+
+	if (arbol->comparador(nodo_a_insertar->elemento,
+			      nodo_actual->elemento) > ELEMENTOS_IGUALES) {
+		if (nodo_actual->derecha == NULL) {
+			nodo_actual->derecha = nodo_a_insertar;
+			arbol->tamanio++;
+			return arbol;
+		}
+		return abb_insertar_rec(arbol, nodo_a_insertar,
+					nodo_actual->derecha);
+	} else if (arbol->comparador(nodo_a_insertar->elemento,
+				     nodo_actual->elemento) <=
+		   ELEMENTOS_IGUALES) {
+		if (nodo_actual->izquierda == NULL) {
+			nodo_actual->izquierda = nodo_a_insertar;
+			arbol->tamanio++;
+			return arbol;
+		}
+		return abb_insertar_rec(arbol, nodo_a_insertar,
+					nodo_actual->izquierda);
+	}
+	return NULL;
+}
+
+void abb_destruir_todo_rec()
+{
+}
+
 abb_t *abb_crear(abb_comparador comparador)
 {
-	return NULL;
+	if (comparador == NULL)
+		return NULL;
+
+	abb_t *abb = malloc(sizeof(abb_t));
+	if (abb == NULL)
+		return NULL;
+
+	abb->nodo_raiz = NULL;
+	abb->comparador = comparador;
+	abb->tamanio = 0;
+
+	return abb;
 }
 
 abb_t *abb_insertar(abb_t *arbol, void *elemento)
 {
-	return arbol;
+	if (arbol == NULL)
+		return NULL;
+
+	nodo_abb_t *nodo_a_insertar = crear_nodo(elemento);
+
+	return abb_insertar_rec(arbol, nodo_a_insertar, arbol->nodo_raiz);
 }
 
 void *abb_quitar(abb_t *arbol, void *elemento)
@@ -25,20 +95,34 @@ void *abb_buscar(abb_t *arbol, void *elemento)
 
 bool abb_vacio(abb_t *arbol)
 {
+	if (arbol == NULL || arbol->tamanio != ARBOL_SIN_NODOS)
+		return false;
+
 	return true;
 }
 
 size_t abb_tamanio(abb_t *arbol)
 {
-	return 0;
+	if (arbol == NULL)
+		return 0;
+
+	return arbol->tamanio;
 }
 
 void abb_destruir(abb_t *arbol)
 {
+	if (arbol == NULL)
+		return;
+
+	abb_destruir_todo(arbol, NULL);
 }
 
 void abb_destruir_todo(abb_t *arbol, void (*destructor)(void *))
 {
+	if (arbol == NULL)
+		return NULL;
+
+	abb_destruir_todo_rec(arbol, destructor);
 }
 
 size_t abb_con_cada_elemento(abb_t *arbol, abb_recorrido recorrido,

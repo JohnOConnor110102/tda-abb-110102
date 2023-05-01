@@ -71,7 +71,7 @@ void se_inserta_correctamente_un_elemento_en_abb()
 	abb_destruir(arbol);
 }
 
-void se_insertan_varios_elementos_correctamente()
+void se_insertan_correctamente_varios_elementos()
 {
 	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
 	    diecisiete = 17;
@@ -195,7 +195,7 @@ void se_quita_correctamente_raiz_con_dos_hijos()
 	abb_destruir(arbol);
 }
 
-void se_quita_correctamente_nodos()
+void se_quitan_correctamente_nodos()
 {
 	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
 	    diecisiete = 17;
@@ -249,6 +249,105 @@ void se_quita_correctamente_nodos()
 	abb_destruir(arbol);
 }
 
+void se_busca_correctamante_un_elemento()
+{
+	int diez = 10, cinco = 5;
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_buscar(NULL, &diez) == NULL,
+		     "No se puede buscar un elemento en un arbol NULL.");
+	abb_insertar(arbol, &diez);
+	pa2m_afirmar(abb_buscar(arbol, &diez) == &diez,
+		     "Se busca correctamente un elemento de un arbol.");
+	pa2m_afirmar(abb_buscar(arbol, &cinco) == NULL,
+		     "Devuelve NULL si se busca un elemento inexistente.\n");
+	abb_destruir(arbol);
+}
+
+void se_buscan_correctamente_varios_elementos()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	abb_t *arbol = abb_crear(comparador);
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(abb_buscar(arbol, &diez) == &diez,
+		     "Se busca el 1er elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &cinco) == &cinco,
+		     "Se busca el 2do elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &quince) == &quince,
+		     "Se busca el 3er elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &dos) == &dos,
+		     "Se busca el 4to elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &siete) == &siete,
+		     "Se busca el 5to elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &doce) == &doce,
+		     "Se busca el 6to elemento del arbol y se encuentra.");
+	pa2m_afirmar(abb_buscar(arbol, &diecisiete) == &diecisiete,
+		     "Se busca el 7mo elemento del arbol y se encuentra.\n");
+	abb_destruir(arbol);
+}
+
+void se_obtiene_correctamente_estado_con_abb_vacio()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_vacio(NULL) == true,
+		     "Devuelve true con un arbol NULL.");
+	pa2m_afirmar(abb_vacio(arbol) == true,
+		     "Devuelve true con un arbol vacío.");
+	abb_insertar(arbol, &diez);
+	pa2m_afirmar(abb_vacio(arbol) == false,
+		     "Devuelve false con un arbol con un elemento.");
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(abb_vacio(arbol) == false,
+		     "Devuelve false con un arbol con varios elementos.");
+	abb_destruir(arbol);
+}
+
+void se_obtiene_correctamente_tamanio_de_abb()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_tamanio(NULL) == 0, "Devuelve 0 si el arbol es NULL.");
+	pa2m_afirmar(abb_tamanio(arbol) == 0,
+		     "Un arbol vacío tiene tamaño 0.\n");
+	abb_insertar(arbol, &diez);
+	pa2m_afirmar(abb_tamanio(arbol) == 1,
+		     "Se interta un elemento y el tamaño es 1.");
+	abb_insertar(arbol, &cinco);
+	pa2m_afirmar(abb_tamanio(arbol) == 2,
+		     "Se interta un elemento y el tamaño es 2.");
+	abb_insertar(arbol, &quince);
+	pa2m_afirmar(abb_tamanio(arbol) == 3,
+		     "Se interta un elemento y el tamaño es 3.");
+	abb_insertar(arbol, &dos);
+	pa2m_afirmar(abb_tamanio(arbol) == 4,
+		     "Se interta un elemento y el tamaño es 4.");
+	abb_insertar(arbol, &siete);
+	pa2m_afirmar(abb_tamanio(arbol) == 5,
+		     "Se interta un elemento y el tamaño es 5.");
+	abb_insertar(arbol, &doce);
+	pa2m_afirmar(abb_tamanio(arbol) == 6,
+		     "Se interta un elemento y el tamaño es 6.");
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(abb_tamanio(arbol) == 7,
+		     "Se interta un elemento y el tamaño es 7.");
+	abb_destruir(arbol);
+}
+
 void pruebas_tda_abb()
 {
 	pa2m_nuevo_grupo("Pruebas `abb_crear`");
@@ -256,14 +355,21 @@ void pruebas_tda_abb()
 	pa2m_nuevo_grupo("Pruebas `abb_insertar`");
 	se_inserta_correctamente_un_elemento_en_abb();
 	se_inserta_correctamente_el_nodo_raiz();
-	se_insertan_varios_elementos_correctamente();
+	se_insertan_correctamente_varios_elementos();
 	pa2m_nuevo_grupo("Pruebas `abb_quitar`");
 	se_quita_correctamente_un_elemento_de_abb();
 	se_quita_correctamente_raiz_hoja();
 	se_quita_correctamente_raiz_con_hijo_derecho();
 	se_quita_correctamente_raiz_con_hijo_izquierdo();
 	se_quita_correctamente_raiz_con_dos_hijos();
-	se_quita_correctamente_nodos();
+	se_quitan_correctamente_nodos();
+	pa2m_nuevo_grupo("Pruebas `abb_buscar`");
+	se_busca_correctamante_un_elemento();
+	se_buscan_correctamente_varios_elementos();
+	pa2m_nuevo_grupo("Pruebas `abb_vacio`");
+	se_obtiene_correctamente_estado_con_abb_vacio();
+	pa2m_nuevo_grupo("Pruebas `abb_tamanio`");
+	se_obtiene_correctamente_tamanio_de_abb();
 }
 
 int main()
@@ -271,17 +377,7 @@ int main()
 	pa2m_nuevo_grupo(
 		"======================== PRUEBS TDA ABB ========================");
 	pruebas_tda_abb();
-	abb_t *arbol = abb_crear(comparador);
 
-	//abb_insertar(arbol, &diez);
-	//abb_insertar(arbol, &cinco);
-	//abb_insertar(arbol, &quince);
-	//abb_insertar(arbol, &dos);
-	//abb_insertar(arbol, &siete);
-	//abb_insertar(arbol, &doce);
-	//abb_insertar(arbol, &diecisiete);
-
-	abb_destruir_todo(arbol, destructor);
 	/* int contador = 0;
 
 	pa2m_afirmar(

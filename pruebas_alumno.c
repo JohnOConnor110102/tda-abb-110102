@@ -43,21 +43,6 @@ void se_inserta_correctamente_el_nodo_raiz()
 	abb_destruir(arbol);
 }
 
-/* abb_t *crear_abb_con_elementos()
-{
-	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
-	    diecisiete = 17;
-	abb_t *abb = abb_crear(comparador);
-	abb_insertar(abb, &diez);
-	abb_insertar(abb, &cinco);
-	abb_insertar(abb, &quince);
-	abb_insertar(abb, &dos);
-	abb_insertar(abb, &siete);
-	abb_insertar(abb, &doce);
-	abb_insertar(abb, &diecisiete);
-	return abb;
-} */
-
 void se_inserta_correctamente_un_elemento_en_abb()
 {
 	int diez = 10;
@@ -67,7 +52,7 @@ void se_inserta_correctamente_un_elemento_en_abb()
 	pa2m_afirmar(abb_insertar(arbol, NULL) == arbol,
 		     "Se puede insertar un elemento NULL.");
 	pa2m_afirmar(arbol->tamanio == 1,
-		     "Se actualia correctamente el tamaño del arbol.\n");
+		     "Se actualiza correctamente el tamaño del arbol.\n");
 	abb_destruir(arbol);
 }
 
@@ -348,6 +333,341 @@ void se_obtiene_correctamente_tamanio_de_abb()
 	abb_destruir(arbol);
 }
 
+bool suma_uno_todo(void *_elemento, void *_get_ignored)
+{
+	if (!_elemento)
+		return false;
+
+	int *elemento = _elemento;
+	(*elemento)++;
+	return true;
+}
+
+bool suma_uno_hasta_siete(void *_elemento, void *_get_ignored)
+{
+	if (!_elemento)
+		return false;
+
+	int *elemento = _elemento;
+	(*elemento)++;
+	if (*elemento == 7)
+		return false;
+
+	return true;
+}
+
+void se_aplica_correctamente_con_cada_elemento()
+{
+	abb_recorrido diez = 10;
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_con_cada_elemento(NULL, INORDEN, suma_uno_todo,
+					   NULL) == 0,
+		     "Devuelve 0 con un arbol NULL.");
+	pa2m_afirmar(abb_con_cada_elemento(arbol, INORDEN, NULL, &diez) == 0,
+		     "Devuelve 0 con una función NULL.");
+	pa2m_afirmar(abb_con_cada_elemento(arbol, diez, suma_uno_hasta_siete,
+					   NULL) == 0,
+		     "Devuelve 0 con un recorrido inválido.");
+	abb_insertar(arbol, &diez);
+	pa2m_afirmar(abb_con_cada_elemento(arbol, INORDEN, suma_uno_todo,
+					   NULL) != 0,
+		     "Se puede invocar con un aux NULL.\n");
+	abb_destruir(arbol);
+}
+
+void se_aplica_correctamente_con_cada_elemento_INORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	pa2m_afirmar(abb_con_cada_elemento(NULL, INORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol NULL iterando INORDEN.");
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_con_cada_elemento(arbol, INORDEN, NULL, &diez) == 0,
+		     "Devuelve 0 con una función NULL iterando INORDEN.");
+	pa2m_afirmar(abb_con_cada_elemento(arbol, INORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol vacío iterando INORDEN.");
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, INORDEN, suma_uno_todo, NULL) == 7,
+		"Se aplica la función la cantidad de veces correcta iterando INORDEN todo el arbol.");
+	pa2m_afirmar(
+		diez == 11 && cinco == 6 && dos == 3 && siete == 8 &&
+			quince == 16 && doce == 13 && diecisiete == 18,
+		"Se aplica la función a cada uno de los elementos iterando INORDEN todo el arbol.");
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, INORDEN, suma_uno_hasta_siete,
+				      NULL) == 2,
+		"Se aplica la función la cantidad de veces correcta iterando INORDEN parte del arbol.");
+	pa2m_afirmar(
+		cinco == 7 && dos == 4 && siete == 8,
+		"Se aplica la función a los elementos correctos iterando INORDEN parte del arbol.\n");
+	abb_destruir(arbol);
+}
+
+void se_aplica_correctamente_con_cada_elemento_PREORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	pa2m_afirmar(abb_con_cada_elemento(NULL, PREORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol NULL iterando PREORDEN.");
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_con_cada_elemento(arbol, PREORDEN, NULL, &diez) == 0,
+		     "Devuelve 0 con una función NULL iterando PREORDEN.");
+	pa2m_afirmar(abb_con_cada_elemento(arbol, PREORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol vacío iterando PREORDEN.");
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, PREORDEN, suma_uno_todo, NULL) ==
+			7,
+		"Se aplica la función la cantidad de veces correcta iterando PREORDEN todo el arbol.");
+	pa2m_afirmar(
+		diez == 11 && cinco == 6 && dos == 3 && siete == 8 &&
+			quince == 16 && doce == 13 && diecisiete == 18,
+		"Se aplica la función a cada uno de los elementos iterando PREORDEN todo el arbol.");
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, PREORDEN, suma_uno_hasta_siete,
+				      NULL) == 2,
+		"Se aplica la función la cantidad de veces correcta iterando PREORDEN parte del arbol.");
+	pa2m_afirmar(
+		cinco == 7 && siete == 8 && dos == 3,
+		"Se aplica la función a los elementos correctos iterando PREORDEN parte del arbol.\n");
+	abb_destruir(arbol);
+}
+
+void se_aplica_correctamente_con_cada_elemento_POSTORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	pa2m_afirmar(abb_con_cada_elemento(NULL, POSTORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol NULL iterando POSTORDEN.");
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_con_cada_elemento(arbol, POSTORDEN, NULL, &diez) == 0,
+		     "Devuelve 0 con una función NULL iterando POSTORDEN.");
+	pa2m_afirmar(abb_con_cada_elemento(arbol, POSTORDEN, suma_uno_todo,
+					   &diez) == 0,
+		     "Devuelve 0 con un arbol vacío iterando POSTORDEN.");
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, POSTORDEN, suma_uno_todo, NULL) ==
+			7,
+		"Se aplica la función la cantidad de veces correcta iterando POSTORDEN todo el arbol.");
+	pa2m_afirmar(
+		diez == 11 && cinco == 6 && dos == 3 && siete == 8 &&
+			quince == 16 && doce == 13 && diecisiete == 18,
+		"Se aplica la función a cada uno de los elementos iterando POSTORDEN todo el arbol.");
+	pa2m_afirmar(
+		abb_con_cada_elemento(arbol, POSTORDEN, suma_uno_hasta_siete,
+				      NULL) == 3,
+		"Se aplica la función la cantidad de veces correcta iterando POSTORDEN parte del arbol.");
+	pa2m_afirmar(
+		cinco == 7 && siete == 9 && dos == 4,
+		"Se aplica la función a los elementos correctos iterando POSTORDEN parte del arbol.\n");
+	abb_destruir(arbol);
+}
+
+void se_recorre_correctamente_un_abb()
+{
+	int diez = 10;
+	void *array[7];
+	pa2m_afirmar(abb_recorrer(NULL, INORDEN, array, 7) == 0,
+		     "Devuelve 0 con un arbol NULL.");
+	abb_t *arbol = abb_crear(comparador);
+	pa2m_afirmar(abb_recorrer(arbol, INORDEN, array, 7) == 0,
+		     "Devuelve 0 con un arbol vacío.");
+	abb_insertar(arbol, &diez);
+	pa2m_afirmar(abb_recorrer(arbol, INORDEN, NULL, 7) == 0,
+		     "Devuelve 0 con un array NULL.");
+	pa2m_afirmar(abb_recorrer(arbol, INORDEN, array, 0) == 0,
+		     "Devuelve 0 con un array de tamaño 0");
+	pa2m_afirmar(abb_recorrer(arbol, diez, array, 7) == 0,
+		     "Devuelve 0 con un recorrido inválido.");
+	pa2m_afirmar(abb_recorrer(arbol, INORDEN, array, 7) != 0,
+		     "Se puede invocar con parámetros válidos.\n");
+	abb_destruir(arbol);
+}
+
+void se_recorre_correctamente_un_abb_INORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	void *array[7];
+	abb_t *arbol = abb_crear(comparador);
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	size_t contador = abb_recorrer(arbol, INORDEN, array, 7);
+	pa2m_afirmar(contador != 0,
+		     "Se puede recorrer el abb en recorrido INORDEN.");
+	pa2m_afirmar(
+		contador == 7,
+		"Devuelve la cantidad correcta de elementos almacenados iterando INORDEN.");
+	pa2m_afirmar(
+		array[0] == &dos,
+		"El 1er elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[1] == &cinco,
+		"El 2do elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[2] == &siete,
+		"El 3er elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[3] == &diez,
+		"El 4to elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[4] == &doce,
+		"El 5to elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[5] == &quince,
+		"El 6to elemento del vector es el correcto iterando INORDEN.");
+	pa2m_afirmar(
+		array[6] == &diecisiete,
+		"El 7mo elemento del vector es el correcto iterando INORDEN.\n");
+	abb_destruir(arbol);
+}
+
+void se_recorre_correctamente_un_abb_PREORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	void *array[7];
+	abb_t *arbol = abb_crear(comparador);
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	size_t contador = abb_recorrer(arbol, PREORDEN, array, 7);
+	pa2m_afirmar(contador != 0,
+		     "Se puede recorrer el abb en recorrido PREORDEN.");
+	pa2m_afirmar(
+		contador == 7,
+		"Devuelve la cantidad correcta de elementos almacenados iterando PREORDEN.");
+	pa2m_afirmar(
+		array[0] == &diez,
+		"El 1er elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[1] == &cinco,
+		"El 2do elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[2] == &dos,
+		"El 3er elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[3] == &siete,
+		"El 4to elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[4] == &quince,
+		"El 5to elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[5] == &doce,
+		"El 6to elemento del vector es el correcto iterando PREORDEN.");
+	pa2m_afirmar(
+		array[6] == &diecisiete,
+		"El 7mo elemento del vector es el correcto iterando PREORDEN.\n");
+	abb_destruir(arbol);
+}
+
+void se_recorre_correctamente_un_abb_POSTORDEN()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	void *array[7];
+	abb_t *arbol = abb_crear(comparador);
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	size_t contador = abb_recorrer(arbol, POSTORDEN, array, 7);
+	pa2m_afirmar(contador != 0,
+		     "Se puede recorrer el abb en recorrido POSTORDEN.");
+	pa2m_afirmar(
+		contador == 7,
+		"Devuelve la cantidad correcta de elementos almacenados iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[0] == &dos,
+		"El 1er elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[1] == &siete,
+		"El 2do elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[2] == &cinco,
+		"El 3er elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[3] == &doce,
+		"El 4to elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[4] == &diecisiete,
+		"El 5to elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[5] == &quince,
+		"El 6to elemento del vector es el correcto iterando POSTORDEN.");
+	pa2m_afirmar(
+		array[6] == &diez,
+		"El 7mo elemento del vector es el correcto iterando POSTORDEN.\n");
+	abb_destruir(arbol);
+}
+
+void suma_uno_todo_destructor(void *_elemento)
+{
+	if (!_elemento)
+		return;
+
+	int *elemento = _elemento;
+	(*elemento)++;
+	return;
+}
+
+void se_destruye_todo_correctamente()
+{
+	int diez = 10, cinco = 5, dos = 2, siete = 7, quince = 15, doce = 12,
+	    diecisiete = 17;
+	abb_t *arbol = abb_crear(comparador);
+	abb_insertar(arbol, &diez);
+	abb_insertar(arbol, &cinco);
+	abb_insertar(arbol, &quince);
+	abb_insertar(arbol, &dos);
+	abb_insertar(arbol, &siete);
+	abb_insertar(arbol, &doce);
+	abb_insertar(arbol, &diecisiete);
+	abb_destruir_todo(NULL, suma_uno_todo_destructor);
+	pa2m_afirmar(diez == 10, "No hace nada con un arbol NULL.");
+	abb_destruir_todo(arbol, suma_uno_todo_destructor);
+	pa2m_afirmar(diez == 11 && cinco == 6 && dos == 3 && siete == 8 &&
+			     quince == 16 && doce == 13 && diecisiete == 18,
+		     "Se aplica la función a todos los elementos del arbol.\n");
+}
+
 void pruebas_tda_abb()
 {
 	pa2m_nuevo_grupo("Pruebas `abb_crear`");
@@ -370,6 +690,18 @@ void pruebas_tda_abb()
 	se_obtiene_correctamente_estado_con_abb_vacio();
 	pa2m_nuevo_grupo("Pruebas `abb_tamanio`");
 	se_obtiene_correctamente_tamanio_de_abb();
+	pa2m_nuevo_grupo("Pruebas `abb_con_cada_elemento`");
+	se_aplica_correctamente_con_cada_elemento();
+	se_aplica_correctamente_con_cada_elemento_INORDEN();
+	se_aplica_correctamente_con_cada_elemento_PREORDEN();
+	se_aplica_correctamente_con_cada_elemento_POSTORDEN();
+	pa2m_nuevo_grupo("Pruebas `abb_recorrer`");
+	se_recorre_correctamente_un_abb();
+	se_recorre_correctamente_un_abb_INORDEN();
+	se_recorre_correctamente_un_abb_PREORDEN();
+	se_recorre_correctamente_un_abb_POSTORDEN();
+	pa2m_nuevo_grupo("Pruebas `abb_destruir_todo`");
+	se_destruye_todo_correctamente();
 }
 
 int main()
@@ -378,17 +710,5 @@ int main()
 		"======================== PRUEBS TDA ABB ========================");
 	pruebas_tda_abb();
 
-	/* int contador = 0;
-
-	pa2m_afirmar(
-		contador == 6,
-		"Llamar abb_destruir_todo aplica el destructor la cantidad de veces adecuada."); */
-
-	abb_t *abb = abb_crear(comparador);
-	void *array[7];
-
-	abb_recorrer(abb, PREORDEN, array, 7);
-
-	abb_destruir(abb);
 	return pa2m_mostrar_reporte();
 }

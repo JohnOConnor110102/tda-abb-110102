@@ -11,6 +11,7 @@ int comparador(void *_elemento1, void *_elemento2)
 	int *elemento2 = _elemento2;
 	return *elemento1 - *elemento2;
 }
+
 void destructor(void *_elemento)
 {
 	if (_elemento) {

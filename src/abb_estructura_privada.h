@@ -15,4 +15,10 @@ struct abb {
 	size_t tamanio;
 };
 
+typedef struct vector_nodos_estatico {
+	void **vector;
+	size_t tope;
+	size_t posicion;
+} vector_nodos_estatico_t;
+
 #endif // ABB_ESTRUCTURA_PRIVADA_H_

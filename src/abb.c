@@ -5,36 +5,30 @@
 
 const int ARBOL_SIN_NODOS = 0;
 const int ARBOL_UN_ELEMENTO = 1;
-const int ELEMENTOS_IGUALES = 0;
-
-typedef struct vector_nodos_estatico {
-	void **vector;
-	size_t tope;
-	size_t posicion;
-} vector_nodos_estatico_t;
 
 nodo_abb_t *crear_nodo(void *elemento)
 {
-	nodo_abb_t *nodo = malloc(sizeof(nodo_abb_t));
+	nodo_abb_t *nodo = calloc(1, sizeof(nodo_abb_t));
 	if (!nodo)
 		return NULL;
 
 	nodo->elemento = elemento;
-	nodo->derecha = NULL;
-	nodo->izquierda = NULL;
 	return nodo;
 }
 
 nodo_abb_t *abb_insertar_rec(abb_t *arbol, nodo_abb_t *nodo_a_insertar,
 			     nodo_abb_t *nodo_actual)
 {
+	if (!nodo_a_insertar)
+		return NULL;
+
 	if (!nodo_actual) {
 		arbol->tamanio++;
 		return nodo_a_insertar;
 	}
 	int comparacion = arbol->comparador(nodo_a_insertar->elemento,
 					    nodo_actual->elemento);
-	if (comparacion > ELEMENTOS_IGUALES)
+	if (comparacion > 0)
 		nodo_actual->derecha = abb_insertar_rec(arbol, nodo_a_insertar,
 							nodo_actual->derecha);
 	else
@@ -64,7 +58,7 @@ nodo_abb_t *abb_quitar_rec(abb_t *arbol, void *elemento,
 		return NULL;
 
 	int comparacion = arbol->comparador(nodo_actual->elemento, elemento);
-	if (comparacion == ELEMENTOS_IGUALES) {
+	if (comparacion == 0) {
 		nodo_abb_t *nodo_actual_derecha = nodo_actual->derecha;
 		nodo_abb_t *nodo_actual_izquierda = nodo_actual->izquierda;
 		*eliminado = nodo_actual->elemento;
@@ -86,11 +80,11 @@ nodo_abb_t *abb_quitar_rec(abb_t *arbol, void *elemento,
 			return nodo_actual_izquierda;
 		}
 	}
-	if (comparacion > ELEMENTOS_IGUALES)
+	if (comparacion > 0)
 		nodo_actual->izquierda = abb_quitar_rec(
 			arbol, elemento, nodo_actual->izquierda, eliminado);
 
-	if (comparacion < ELEMENTOS_IGUALES)
+	if (comparacion < 0)
 		nodo_actual->derecha = abb_quitar_rec(
 			arbol, elemento, nodo_actual->derecha, eliminado);
 
@@ -104,10 +98,10 @@ nodo_abb_t *abb_buscar_rec(abb_t *arbol, void *elemento,
 		return NULL;
 
 	int comparacion = arbol->comparador(nodo_actual->elemento, elemento);
-	if (comparacion < ELEMENTOS_IGUALES)
+	if (comparacion < 0)
 		return abb_buscar_rec(arbol, elemento, nodo_actual->derecha);
 
-	if (comparacion > ELEMENTOS_IGUALES)
+	if (comparacion > 0)
 		return abb_buscar_rec(arbol, elemento, nodo_actual->izquierda);
 
 	return nodo_actual;
@@ -211,13 +205,11 @@ abb_t *abb_crear(abb_comparador comparador)
 	if (!comparador)
 		return NULL;
 
-	abb_t *abb = malloc(sizeof(abb_t));
+	abb_t *abb = calloc(1, sizeof(abb_t));
 	if (!abb)
 		return NULL;
 
-	abb->nodo_raiz = NULL;
 	abb->comparador = comparador;
-	abb->tamanio = 0;
 	return abb;
 }
 
@@ -256,10 +248,7 @@ void *abb_buscar(abb_t *arbol, void *elemento)
 
 bool abb_vacio(abb_t *arbol)
 {
-	if (!arbol || abb_tamanio(arbol) == ARBOL_SIN_NODOS)
-		return true;
-
-	return false;
+	return (!arbol || abb_tamanio(arbol) == 0);
 }
 
 size_t abb_tamanio(abb_t *arbol)
@@ -277,15 +266,22 @@ size_t abb_con_cada_elemento(abb_t *arbol, abb_recorrido recorrido,
 		return 0;
 
 	size_t contador = 0;
-	if (recorrido == INORDEN)
+	switch (recorrido) {
+	case INORDEN:
 		abb_con_cada_elemento_inorden(arbol->nodo_raiz, funcion, aux,
 					      &contador);
-	else if (recorrido == PREORDEN)
+		break;
+	case PREORDEN:
 		abb_con_cada_elemento_preorden(arbol->nodo_raiz, funcion, aux,
 					       &contador);
-	else if (recorrido == POSTORDEN)
+		break;
+	case POSTORDEN:
 		abb_con_cada_elemento_postorden(arbol->nodo_raiz, funcion, aux,
 						&contador);
+		break;
+	default:
+		break;
+	}
 
 	return contador;
 }

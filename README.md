@@ -29,7 +29,7 @@ Línea de ejecución con valgrind pruebas alumno: valgrind --leak-check=full --t
 
 Las estructuras desarrolladas en el TP se basan en un ARBOL DE BÚSQUEDA BINARIO (ABB).
 
-En un principio, se crea un árbol mediante la función `abb_crear`, cuyo proceso de ve representado en el siguiente esquema:
+En un principio, se crea un árbol mediante la función `abb_crear`, cuyo proceso se ve representado en el siguiente esquema:
 
 ![Diagrama memoria abb_crear](img/diagrama_abb_crear.jpeg)
 
@@ -51,12 +51,6 @@ Y por úlitmo, la función `abb_recorrer`, posibilita copiar los elementos del �
 
 ## Respuestas a las preguntas teóricas
 
-Incluír acá las respuestas a las preguntas del enunciado (si aplica).
-
-    qué es un arbol
-
-arbol binario de busqueda sigue una serie de convenciones para tener una organización estructurada del árbol, se tiene una convención de orden. en este caso menorez a izq y mayores a der.
-
 - Explique teóricamente qué es una árbol, árbol binario y árbol
   binario de búsqueda. Explique cómo funcionan, cuáles son sus operaciones básicas
   (incluyendo el análisis de complejidad de cada una de ellas) y por qué es
@@ -69,13 +63,13 @@ Un árbol es en principio una colección de nodos, siendo estos los elementos de
 
 Empezando por el nodo raíz, este puede tener N cantidad de nodos hijo, los cuales serán aquellos a los que este tenga acceso. En el caso de la imágen anterior, A sería el nodo raíz de todo el árbol y B, C, D, F, G, y H serían sus hijos. Además, se observa que por ejemplo E es el nodo raíz de su subárbol, teniendo como hijos a I, J y K.
 
-Existe varios de tipos de árbol, los cuales se basan en la estructura mencionada. Por ejemplo, un árbol binario es aquél árbol cuyos nodos tienen exclusivamente dos nodos hijos, sean vacíos o no. Y aún más, un árbol binario de búsqueda, es un árbol binario que además adopta alguna convención de organización para los elementos almacenados. En este sentido se logran establecer pautas que posibilitan realizar operaciones con el mismo de manera mucho más eficiente.
+Existen varios de tipos de árbol, los cuales se basan en la estructura mencionada. Por ejemplo, un árbol binario es aquél árbol cuyos nodos tienen exclusivamente dos nodos hijos, sean vacíos o no. Y aún más, un árbol binario de búsqueda, es un árbol binario que además adopta alguna convención de organización para los elementos almacenados. En este sentido se logran establecer pautas que posibilitan realizar operaciones con el mismo de manera mucho más eficiente.
 
 Su funcionamiento se basa en algunas operaciones básicas, siendo estas ingresar elementos al árbol, quitar elementos del árbol, buscar elementos en el árbol y recorrer el árbol.
 
 Para la inserción de elementos se suelen adoptar convenciones según la implementación desarrollada. Por ejemplo, se puede tomar el caso en que, teniendo un elemento a insertar, si este es menor o igual al elemento del nodo que se está comparando, se continuará con la inserción por el hijo izquierdo, mientras que si es mayor, por el hijo derecho. Y en caso de que el nodo con el que se esté comparando esté vacío, se insertará en el mismo.
 
-En cuanto a la complejidad computacional de esta operación, se puede realizar el siguiente análisis. Teniendo en cuenta la estructura del árbol, en que a medida que se baja por sus niveles se está dejando de lado el resto de los subarboles del mismo, esto significa que con cada iteración que se realiza se reduce la complejidad del "problema" en n/M, siendo M la cantidad de hijos que tienen los nodos del árbol. Por esta cuestión, si se aplica el siguiente razonamiento del esquema, resulta que la complejidad computacional promedio de esta operación resulta: O(log(n)). El hecho de que se considere la complejidad promedio, es porque los árboles no siempre van a estar perfectamente "balanceados", significando que no siempre en cada iteración se va a reducir el problema de igual manera. Pero para definir esta complejidad se tomó en cuenta un árbol balanceado, ya que sino, en el peor de los casos el árbol se habría transformado en una lista, haciendo que la complejidad de inserción sea O(n).
+En cuanto a la complejidad computacional de esta operación, se puede realizar el siguiente análisis. Teniendo en cuenta la estructura del árbol, en que a medida que se baja por sus niveles se está dejando de lado el resto de los subarboles del mismo, esto significa que con cada iteración que se realiza se reduce la complejidad del "problema" en n/M, siendo M la cantidad de hijos que tienen los nodos del árbol. Por esta cuestión, si se aplica el siguiente razonamiento del esquema, la complejidad computacional promedio de esta operación resulta: O(log(n)). El hecho de que se considere la complejidad promedio, es porque los árboles no siempre van a estar perfectamente "balanceados", significando que no siempre en cada iteración se va a reducir el problema de igual manera. Pero para definir esta complejidad se tomó en cuenta un árbol balanceado, ya que sino, en el peor de los casos el árbol se habría transformado en una lista, haciendo que la complejidad de inserción sea O(n).
 
 ![Diagrama complejidad acceso a datos](img/diagrama_acceso_a_datos.jpeg)
 
